@@ -2,15 +2,40 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
-      "use": "@vercel/node"
+      "src": "index.js",
+      "use": "@vercel/node",
+      "config": {
+        "excludeFiles": "{static/**,docs/**,test/**,tests/**,scripts/**,migration-data/**}"
+      }
+    },
+    {
+      "src": "static/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
+    { "src": "/api/(.*)", "dest": "/index.js" },
+    { "src": "/wisp/(.*)", "dest": "/index.js" },
+    { "src": "/socket.io/(.*)", "dest": "/index.js" },
+
+    { "src": "/!", "status": 308, "headers": { "Location": "/b" } },
+    { "src": "/", "dest": "/static/index.html" },
+    { "src": "/a", "dest": "/static/apps.html" },
+    { "src": "/g", "dest": "/static/games.html" },
+    { "src": "/s", "dest": "/static/settings.html" },
+    { "src": "/b", "dest": "/static/browser.html" },
+    { "src": "/d", "dest": "/static/dashboard.html" },
+    { "src": "/-", "dest": "/static/media.html" },
+    { "src": "/m", "dest": "/static/media.html" },
+    { "src": "/profile", "dest": "/static/account.html" },
+    { "src": "/login", "dest": "/static/login.html" },
+    { "src": "/signup", "dest": "/static/signup.html" },
+    { "src": "/l", "dest": "/static/assets/404/loading.html" },
+    { "src": "/c", "dest": "/static/chat.html" },
+    { "src": "/chat(?:/[^/]+)?", "dest": "/static/chat.html" },
+
+    { "src": "/(.*)", "dest": "/static/$1", "check": true },
+    { "src": "/(.*)", "dest": "/static/$1.html", "check": true },
+    { "src": "/(.*)", "status": 404, "dest": "/static/404.html" }
   ]
 }
